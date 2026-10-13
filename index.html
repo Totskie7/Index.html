@@ -13,7 +13,7 @@
 <h2>Investment 30-Days Contract</h2>
 <p style="font-size: 0.9rem; color: #aaa;">Aktibong Puhunan: <span id="display-capital" style="color: white; font-weight: bold;">₱0.00</span></p>
 
-<!-- SECRET CHANGER: Kapag pinindot mo ito nang matagal (2 seconds), lalabas ang Admin Password -->
+<!-- SECRET CHANGER: Long press mo ito nang 2 seconds para lumabas ang Admin Control -->
 <p id="secret-text" style="font-size: 0.9rem; color: #aaa; user-select: none; cursor: pointer;">Live na Tubo (Profit Only):</p>
 
 <div id="live-balance" style="color: #4caf50; font-weight: bold; font-size: 2.2rem; margin: 10px 0; font-family: monospace;">₱0.0000</div>
@@ -41,7 +41,19 @@
 
 <script>
 const GCASH_NUMBER = "09512947856";
+
+// BAGONG FEATURE: Babasahin nito kung may 'puhunan' sa dulo ng link
+const urlParams = new URLSearchParams(window.location.search);
+const puhunanMulaSaLink = parseFloat(urlParams.get('puhunan'));
+
 let capital = parseFloat(localStorage.getItem('inv_capital')) || 0;
+
+// Kung may nakasulat na puhunan sa link, iyon ang ipipilit nitong gamitin at i-save
+if (!isNaN(puhunanMulaSaLink) && puhunanMulaSaLink >= 0) {
+    capital = puhunanMulaSaLink;
+    localStorage.setItem('inv_capital', capital);
+}
+
 let runningProfit = parseFloat(localStorage.getItem('inv_profit')) || 0;
 let hulingOras = parseInt(localStorage.getItem('inv_timestamp')) || Date.now();
 
@@ -74,27 +86,17 @@ alert(
 );
 }
 
-// GABAY PARA SA MATAGAL NA PAGPINDOT (LONG PRESS)
 let timer;
 const secretText = document.getElementById('secret-text');
 
-// Kapag sinimulang pindutin ng daliri
 secretText.addEventListener('mousedown', simulanPindot);
 secretText.addEventListener('touchstart', simulanPindot);
-
-// Kapag binitawan ang pagkapindot
 secretText.addEventListener('mouseup', ihintoPindot);
 secretText.addEventListener('mouseleave', ihintoPindot);
 secretText.addEventListener('touchend', ihintoPindot);
 
-function simulanPindot() {
-    // Maghihintay ng 2 segundo (2000 milliseconds) bago buksan ang admin
-    timer = setTimeout(buksanAdmin, 2000);
-}
-
-function ihintoPindot() {
-    clearTimeout(timer);
-}
+function simulanPindot() { timer = setTimeout(buksanAdmin, 2000); }
+function ihintoPindot() { clearTimeout(timer); }
 
 function buksanAdmin() {
 let pw = prompt("Ipasok ang Admin Password:");
