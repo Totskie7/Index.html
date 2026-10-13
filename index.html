@@ -12,7 +12,10 @@
 
 <h2>Investment 30-Days Contract</h2>
 <p style="font-size: 0.9rem; color: #aaa;">Aktibong Puhunan: <span id="display-capital" style="color: white; font-weight: bold;">₱0.00</span></p>
-<p style="font-size: 0.9rem; color: #aaa;">Live na Tubo (Profit Only):</p>
+
+<!-- SECRET CHANGER: Kapag pinindot mo ito nang matagal (2 seconds), lalabas ang Admin Password -->
+<p id="secret-text" style="font-size: 0.9rem; color: #aaa; user-select: none; cursor: pointer;">Live na Tubo (Profit Only):</p>
+
 <div id="live-balance" style="color: #4caf50; font-weight: bold; font-size: 2.2rem; margin: 10px 0; font-family: monospace;">₱0.0000</div>
 
 <!-- MGA BUTTON NG USER -->
@@ -20,9 +23,6 @@
 <button style="flex: 1; padding: 12px; font-weight: bold; background-color: #2196f3; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="userTopUpDirect()">Top-Up Link</button>
 <button style="flex: 1; padding: 12px; font-weight: bold; background-color: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="alert('Cash-Out Notification: Mag-send ng mensahe sa Admin para iproseso ang pag-withdraw ng iyong tubo.')">Cash-Out Link</button>
 </div>
-
-<!-- SECRET ADMIN AREA TRIGGER (MUKHA LANG TULDOK SA PINAKAILALIM) -->
-<div style="color: #222; cursor: pointer; user-select: none; padding: 10px; font-size: 0.8rem; margin-top: 50px; display: inline-block;" onclick="buksanAdmin()">.</div>
 
 <!-- BOX NG ADMIN CONTROL -->
 <div id="admin-box" style="display: none; margin: 25px auto; border: 2px dashed #ff9800; padding: 20px; max-width: 300px; background-color: #1a1a24; border-radius: 8px; box-sizing: border-box;">
@@ -72,6 +72,28 @@ alert(
 "GCash Name: ADMIN ACCOUNT\n\n" +
 "PAALALA: I-screenshot ang resibo at i-send sa Admin upang ma-verify at ma-approve ang iyong account!"
 );
+}
+
+// GABAY PARA SA MATAGAL NA PAGPINDOT (LONG PRESS)
+let timer;
+const secretText = document.getElementById('secret-text');
+
+// Kapag sinimulang pindutin ng daliri
+secretText.addEventListener('mousedown', simulanPindot);
+secretText.addEventListener('touchstart', simulanPindot);
+
+// Kapag binitawan ang pagkapindot
+secretText.addEventListener('mouseup', ihintoPindot);
+secretText.addEventListener('mouseleave', ihintoPindot);
+secretText.addEventListener('touchend', ihintoPindot);
+
+function simulanPindot() {
+    // Maghihintay ng 2 segundo (2000 milliseconds) bago buksan ang admin
+    timer = setTimeout(buksanAdmin, 2000);
+}
+
+function ihintoPindot() {
+    clearTimeout(timer);
 }
 
 function buksanAdmin() {
